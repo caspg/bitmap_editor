@@ -11,8 +11,6 @@ class BitmapEditor
     end
   end
 
-  private
-
   def execute_command(splitted_input)
     case splitted_input[0]
     when 'I'
@@ -38,6 +36,8 @@ class BitmapEditor
     end
   end
 
+  private
+
   def show_initial_message
     puts 'type ? for help'
   end
@@ -52,7 +52,7 @@ class BitmapEditor
   end
 
   def help_message
-    <<~HEREDOC  
+    <<~HEREDOC
       ? - Help
       I M N       - Create a new M x N image with all pixels coloured white (O).
       C           - Clears the table, setting all pixels to white (O).
