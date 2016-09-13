@@ -1,24 +1,46 @@
 class BitmapEditor
   def run
     @running = true
-    puts 'type ? for help'
-    
+    show_initial_message
+
     while @running
       print '> '
-      input = gets.chomp
+      splitted_input = gets.chomp.split(' ')
 
-      case input
-      when '?'
-        show_help
-      when 'X'
-        exit_console
-      else
-        puts 'unrecognised command :('
-      end
+      execute_command(splitted_input)
     end
   end
 
   private
+
+  def execute_command(splitted_input)
+    case splitted_input[0]
+    when 'I'
+      puts 'command: I'
+    when 'C'
+      puts 'command: C'
+    when 'L'
+      puts 'command: L'
+    when 'V'
+      puts 'command: V'
+    when 'H'
+      puts 'command: H'
+    when 'S'
+      puts 'command: S'
+    when '?'
+      show_help
+    when 'X'
+      exit_console
+    when nil
+      show_initial_message
+    else
+      puts 'unrecognised command :('
+    end
+  end
+
+  def show_initial_message
+    puts 'type ? for help'
+  end
 
   def exit_console
     puts 'goodbye!'
