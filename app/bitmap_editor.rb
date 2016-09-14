@@ -24,10 +24,10 @@ class BitmapEditor
     case splitted_input[0]
     when 'I'
       Command.new.create_new_bitmap(splitted_input)
-    # when 'C'
-    #   puts 'command: C'
-    # when 'L'
-    #   puts 'command: L'
+    when 'C'
+      Command.new.clear_bitmap(@bitmap)
+    when 'L'
+      Command.new.colour_pixel(@bitmap, splitted_input)
     # when 'V'
     #   puts 'command: V'
     # when 'H'

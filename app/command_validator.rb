@@ -14,10 +14,31 @@ class CommandValidator
     errors
   end
 
+  def validate_colour_pixel(bitmap, x, y, colour)
+    errors = []
+
+    if x.nil? || y.nil? || colour.nil?
+      errors << 'Missing parameters. Correct command: "L X Y C"'
+      return errors
+    end
+
+    unless pixel_coords_in_range?(bitmap, x, y)
+      errors << "Pixel coordinates should be within range; X: 1-#{bitmap.width}, Y: 1-#{bitmap.height}"
+    end
+
+    errors << 'Colour should be a string.' if colour.to_i.to_s == colour
+    errors
+  end
+
   private
 
   def dimensions_in_range?(width, height)
     width.to_i.between?(MIN_DIMENSION, MAX_DIMENSION) &&
       height.to_i.between?(MIN_DIMENSION, MAX_DIMENSION)
+  end
+
+  def pixel_coords_in_range?(bitmap, x, y)
+    x.to_i.between?(MIN_DIMENSION, bitmap.width) &&
+      y.to_i.between?(MIN_DIMENSION, bitmap.height)
   end
 end

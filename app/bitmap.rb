@@ -10,7 +10,7 @@ class Bitmap
   end
 
   def colour_pixel(x, y, colour)
-    @pixels[x][y] = colour
+    @pixels[x.to_i][y.to_i] = colour
   end
 
   def clear_pixels
