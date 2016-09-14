@@ -66,6 +66,35 @@ class CommandValidator
     errors
   end
 
+  def validate_draw_horizontal_line(bitmap, x1, x2, y, colour)
+    errors = []
+
+    if x1.nil? || x2.nil? || y.nil? || colour.nil?
+      errors << 'Missing parameters. Correct command: "H X1 X2 Y C"'
+      return errors
+    end
+
+    unless integer?(x1) && integer?(x2) && integer?(y)
+      errors << 'Coordinates must be an integer.'
+      return errors
+    end
+
+    if coords_in_correct_range?(x1, x2)
+      msg = "coordinate should be in range: #{MIN_DIMENSION} - #{bitmap.width}"
+      errors << "X1 #{msg}" unless x_coord_in_range?(bitmap.width, x1)
+      errors << "X2 #{msg}" unless x_coord_in_range?(bitmap.width, x2)
+    else
+      errors << 'coord X2 should be greater than coord X1.'
+    end
+
+    unless y_coord_in_range?(bitmap.height, y)
+      errors << "Y coordinate should be in range: #{MIN_DIMENSION} - #{bitmap.height}"
+    end
+
+    errors << 'Colour should be a string.' if integer?(colour)
+    errors
+  end
+
   private
 
   def dimensions_in_range?(width, height)

@@ -10,6 +10,7 @@ describe Command do
     allow(validator).to receive(:validate_create_new_bitmap) { errors }
     allow(validator).to receive(:validate_colour_pixel) { errors }
     allow(validator).to receive(:validate_draw_vertical_line) { errors }
+    allow(validator).to receive(:validate_draw_horizontal_line) { errors }
   end
 
   describe '#create_new_bitmap' do
@@ -99,6 +100,33 @@ describe Command do
         response = subject.draw_vertical_line(bitmap, ['V', '1', '1', '2', 'W'])
 
         expect(bitmap).to have_received(:draw_vertical_line).with('1', '1', '2', 'W')
+        expect(response).to be_instance_of(Response)
+      end
+    end
+  end
+
+  describe '#draw_horizontal_line' do
+    let(:bitmap) { double }
+    before { allow(bitmap).to receive(:draw_horizontal_line) }
+
+    context 'when validator returns error' do
+      let(:errors) { ['some error'] }
+
+      it 'does not call :draw_horizontal_line' do
+        response = subject.draw_horizontal_line(bitmap, ['H', '1', '1', '2', 'W'])
+
+        expect(bitmap).not_to have_received(:draw_horizontal_line)
+        expect(response).to be_instance_of(Response)
+      end
+    end
+
+    context 'when validator does not return error' do
+      let(:errors) { [] }
+
+      it 'does call :draw_horizontal_line' do
+        response = subject.draw_horizontal_line(bitmap, ['H', '1', '2', '2', 'W'])
+
+        expect(bitmap).to have_received(:draw_horizontal_line).with('1', '2', '2', 'W')
         expect(response).to be_instance_of(Response)
       end
     end

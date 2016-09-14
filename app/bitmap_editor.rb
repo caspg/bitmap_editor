@@ -30,8 +30,8 @@ class BitmapEditor
       Command.new.colour_pixel(@bitmap, splitted_input)
     when 'V'
       Command.new.draw_vertical_line(@bitmap, splitted_input)
-    # when 'H'
-    #   puts 'command: H'
+    when 'H'
+      Command.new.draw_horizontal_line(@bitmap, splitted_input)
     when 'S'
       Command.new.show_bitmap(@bitmap)
     when '?'

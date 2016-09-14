@@ -54,4 +54,24 @@ describe CommandValidator do
     it { expect(subject.validate_draw_vertical_line(bitmap, '1', '1', '3', '45')).to eq([error_msg6]) }
     it { expect(subject.validate_draw_vertical_line(bitmap, '1', 'string', '3', 'W')).to eq([error_msg7]) }
   end
+
+  describe '#validate_draw_horizontal_line' do
+    let(:error_msg1) { 'Missing parameters. Correct command: "H X1 X2 Y C"' }
+    let(:error_msg2) { "Y coordinate should be in range: 1 - #{bitmap.height}" }
+    let(:error_msg3) { "X1 coordinate should be in range: 1 - #{bitmap.width}" }
+    let(:error_msg4) { "X2 coordinate should be in range: 1 - #{bitmap.width}" }
+    let(:error_msg5) { 'coord X2 should be greater than coord X1.' }
+    let(:error_msg6) { 'Colour should be a string.' }
+    let(:error_msg7) { 'Coordinates must be an integer.' }
+    let(:bitmap)     { double(:bitmap, width: 3, height: 5) }
+
+    it { expect(subject.validate_draw_horizontal_line(bitmap, '1', '1', '2', nil)).to eq([error_msg1]) }
+    it { expect(subject.validate_draw_horizontal_line(bitmap, '123', '1', '2', nil)).to eq([error_msg1]) }
+    it { expect(subject.validate_draw_horizontal_line(bitmap, '1', '2', '123', 'W')).to eq([error_msg2]) }
+    it { expect(subject.validate_draw_horizontal_line(bitmap, '0', '1', '2', 'W')).to eq([error_msg3]) }
+    it { expect(subject.validate_draw_horizontal_line(bitmap, '1', '10', '3', 'W')).to eq([error_msg4]) }
+    it { expect(subject.validate_draw_horizontal_line(bitmap, '4', '2', '1', 'W')).to eq([error_msg5]) }
+    it { expect(subject.validate_draw_horizontal_line(bitmap, '1', '2', '3', '45')).to eq([error_msg6]) }
+    it { expect(subject.validate_draw_horizontal_line(bitmap, '1', 'string', '3', 'W')).to eq([error_msg7]) }
+  end
 end

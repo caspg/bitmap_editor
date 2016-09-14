@@ -39,6 +39,17 @@ class Command
     Response.new(bitmap, errors)
   end
 
+  def draw_horizontal_line(bitmap, splitted_input)
+    x1 = splitted_input[1]
+    x2 = splitted_input[2]
+    y = splitted_input[3]
+    colour = splitted_input[4]
+    errors = CommandValidator.new.validate_draw_horizontal_line(bitmap, x1, x2, y, colour)
+
+    bitmap.draw_horizontal_line(x1, x2, y, colour) if errors.empty?
+    Response.new(bitmap, errors)
+  end
+
   def show_bitmap(bitmap)
     bitmap.pixels.transpose.each do |row|
       puts row.join(' ')
