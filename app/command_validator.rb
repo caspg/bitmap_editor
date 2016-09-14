@@ -33,7 +33,7 @@ class CommandValidator
       errors << "Pixel coordinates should be within range; X: #{MIN_DIMENSION} - #{bitmap.width}, Y: #{MIN_DIMENSION} - #{bitmap.height}"
     end
 
-    errors << 'Colour should be a string.' if integer?(colour)
+    errors << incorrect_colour_msg unless correct_colour?(colour)
     errors
   end
 
@@ -60,7 +60,7 @@ class CommandValidator
       errors << 'coord Y2 should be greater than coord Y1.'
     end
 
-    errors << 'Colour should be a string.' if integer?(colour)
+    errors << incorrect_colour_msg unless correct_colour?(colour)
     errors
   end
 
@@ -87,7 +87,7 @@ class CommandValidator
       errors << "Y coordinate should be in range: #{MIN_DIMENSION} - #{bitmap.height}"
     end
 
-    errors << 'Colour should be a string.' if integer?(colour)
+    errors << incorrect_colour_msg unless correct_colour?(colour)
     errors
   end
 
@@ -95,6 +95,10 @@ class CommandValidator
 
   def create_new_bitmap_msg
     'You have to create a new M x N bitmap with "I M N" command'
+  end
+
+  def incorrect_colour_msg
+    'Colour should be specified as a capital letter.'
   end
 
   def dimensions_in_range?(width, height)
@@ -120,5 +124,9 @@ class CommandValidator
 
   def integer?(variable)
     variable.to_i.to_s == variable
+  end
+
+  def correct_colour?(colour)
+    colour.length == 1 && colour.match(/[A-Z]/)
   end
 end
