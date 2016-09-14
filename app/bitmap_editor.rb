@@ -1,54 +1,63 @@
+require_relative './response'
+require_relative './command'
+
 class BitmapEditor
+  def initialize
+    @bitmap = nil
+  end
+
   def run
     @running = true
-    show_initial_message
+    puts initial_message
 
     while @running
       print '> '
       splitted_input = gets.chomp.split(' ')
 
-      execute_command(splitted_input)
+      response = execute_command(splitted_input)
+      @bitmap = response.bitmap
+      puts response.message unless response.message.nil? || response.message.empty?
     end
   end
 
   def execute_command(splitted_input)
     case splitted_input[0]
     when 'I'
-      puts 'command: I'
-    when 'C'
-      puts 'command: C'
-    when 'L'
-      puts 'command: L'
-    when 'V'
-      puts 'command: V'
-    when 'H'
-      puts 'command: H'
+      Command.new.create_new_bitmap(splitted_input)
+    # when 'C'
+    #   puts 'command: C'
+    # when 'L'
+    #   puts 'command: L'
+    # when 'V'
+    #   puts 'command: V'
+    # when 'H'
+    #   puts 'command: H'
     when 'S'
-      puts 'command: S'
+      Command.new.show_bitmap(@bitmap)
     when '?'
-      show_help
+      Response.new(@bitmap, help_message)
     when 'X'
       exit_console
     when nil
-      show_initial_message
+      Response.new(@bitmap, initial_message)
     else
-      puts 'unrecognised command :('
+      Response.new(@bitmap, 'unrecognised command :(')
     end
   end
 
   private
 
-  def show_initial_message
-    puts 'type ? for help'
+  def initial_message
+    'type ? for help'
   end
 
   def exit_console
-    puts 'goodbye!'
     @running = false
+    Response.new(@bitmap, 'goodbye!')
   end
 
   def show_help
-    puts help_message
+    Response.new(@bitmap, help_message)
   end
 
   def help_message
