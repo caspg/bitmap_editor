@@ -28,6 +28,17 @@ class Command
     Response.new(bitmap, errors)
   end
 
+  def draw_vertical_line(bitmap, splitted_input)
+    x = splitted_input[1]
+    y1 = splitted_input[2]
+    y2 = splitted_input[3]
+    colour = splitted_input[4]
+    errors = CommandValidator.new.validate_draw_vertical_line(bitmap, x, y1, y2, colour)
+
+    bitmap.draw_vertical_line(x, y1, y2, colour) if errors.empty?
+    Response.new(bitmap, errors)
+  end
+
   def show_bitmap(bitmap)
     bitmap.pixels.transpose.each do |row|
       puts row.join(' ')

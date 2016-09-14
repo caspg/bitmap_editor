@@ -28,8 +28,8 @@ class BitmapEditor
       Command.new.clear_bitmap(@bitmap)
     when 'L'
       Command.new.colour_pixel(@bitmap, splitted_input)
-    # when 'V'
-    #   puts 'command: V'
+    when 'V'
+      Command.new.draw_vertical_line(@bitmap, splitted_input)
     # when 'H'
     #   puts 'command: H'
     when 'S'

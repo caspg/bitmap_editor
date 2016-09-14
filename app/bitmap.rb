@@ -18,8 +18,8 @@ class Bitmap
   end
 
   def draw_vertical_line(x, y1, y2, colour)
-    (y1..y2).each do |row_index|
-      @pixels[x][row_index] = colour
+    (y1.to_i..y2.to_i).each do |row_index|
+      @pixels[x.to_i][row_index] = colour
     end
   end
 
