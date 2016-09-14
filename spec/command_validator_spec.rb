@@ -56,7 +56,7 @@ describe CommandValidator do
     let(:error_msg5) { 'coord Y2 should be greater than coord Y1.' }
     let(:error_msg6) { 'Colour should be specified as a capital letter.' }
     let(:error_msg7) { 'Coordinates must be an integer.' }
-    let(:bitmap)     { double(:bitmap, width: 3, height: 5) }
+    let(:bitmap)     { double(:bitmap, width: 3, height: 11) }
 
     it { expect(subject.validate_draw_vertical_line(bitmap, '1', '1', '2', 'W')).to eq([]) }
 
@@ -69,6 +69,8 @@ describe CommandValidator do
     it { expect(subject.validate_draw_vertical_line(bitmap, '1', '3', '1', 'W')).to eq([error_msg5]) }
     it { expect(subject.validate_draw_vertical_line(bitmap, '1', '1', '3', 'c')).to eq([error_msg6]) }
     it { expect(subject.validate_draw_vertical_line(bitmap, '1', 'string', '3', 'W')).to eq([error_msg7]) }
+
+    it { expect(subject.validate_draw_vertical_line(bitmap, '1', '3', '11', 'W')).not_to eq([error_msg5]) }
   end
 
   describe '#validate_draw_horizontal_line' do
@@ -79,7 +81,7 @@ describe CommandValidator do
     let(:error_msg5) { 'coord X2 should be greater than coord X1.' }
     let(:error_msg6) { 'Colour should be specified as a capital letter.' }
     let(:error_msg7) { 'Coordinates must be an integer.' }
-    let(:bitmap)     { double(:bitmap, width: 3, height: 5) }
+    let(:bitmap)     { double(:bitmap, width: 11, height: 5) }
 
     it { expect(subject.validate_draw_horizontal_line(bitmap, '1', '2', '2', 'W')).to eq([]) }
 
@@ -88,9 +90,11 @@ describe CommandValidator do
     it { expect(subject.validate_draw_horizontal_line(bitmap, '123', '1', '2', nil)).to eq([error_msg1]) }
     it { expect(subject.validate_draw_horizontal_line(bitmap, '1', '2', '123', 'W')).to eq([error_msg2]) }
     it { expect(subject.validate_draw_horizontal_line(bitmap, '0', '1', '2', 'W')).to eq([error_msg3]) }
-    it { expect(subject.validate_draw_horizontal_line(bitmap, '1', '10', '3', 'W')).to eq([error_msg4]) }
+    it { expect(subject.validate_draw_horizontal_line(bitmap, '1', '15', '3', 'W')).to eq([error_msg4]) }
     it { expect(subject.validate_draw_horizontal_line(bitmap, '4', '2', '1', 'W')).to eq([error_msg5]) }
     it { expect(subject.validate_draw_horizontal_line(bitmap, '1', '2', '3', 's')).to eq([error_msg6]) }
     it { expect(subject.validate_draw_horizontal_line(bitmap, '1', 'string', '3', 'W')).to eq([error_msg7]) }
+
+    it { expect(subject.validate_draw_horizontal_line(bitmap, '5', '10', '1', 'W')).not_to eq([error_msg5]) }
   end
 end

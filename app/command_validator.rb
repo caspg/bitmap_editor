@@ -119,7 +119,7 @@ class CommandValidator
   end
 
   def coords_in_correct_range?(coord1, coord2)
-    coord1 < coord2
+    coord1.to_i < coord2.to_i
   end
 
   def integer?(variable)
