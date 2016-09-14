@@ -14,8 +14,10 @@ class Command
   end
 
   def clear_bitmap(bitmap)
-    bitmap.clear_pixels
-    Response.new(bitmap, nil)
+    errors = CommandValidator.new.validate_clear_bitmap(bitmap)
+
+    bitmap.clear_pixels if errors.empty?
+    Response.new(bitmap, errors)
   end
 
   def colour_pixel(bitmap, splitted_input)

@@ -16,7 +16,13 @@ class CommandValidator
     errors
   end
 
+  def validate_clear_bitmap(bitmap)
+    create_new_bitmap_msg if bitmap.nil?
+  end
+
   def validate_colour_pixel(bitmap, x, y, colour)
+    return create_new_bitmap_msg if bitmap.nil?
+
     errors = []
 
     if x.nil? || y.nil? || colour.nil?
@@ -38,6 +44,8 @@ class CommandValidator
   end
 
   def validate_draw_vertical_line(bitmap, x, y1, y2, colour)
+    return create_new_bitmap_msg if bitmap.nil?
+
     errors = []
 
     if x.nil? || y1.nil? || y2.nil? || colour.nil?
@@ -67,6 +75,8 @@ class CommandValidator
   end
 
   def validate_draw_horizontal_line(bitmap, x1, x2, y, colour)
+    return create_new_bitmap_msg if bitmap.nil?
+
     errors = []
 
     if x1.nil? || x2.nil? || y.nil? || colour.nil?
@@ -96,6 +106,10 @@ class CommandValidator
   end
 
   private
+
+  def create_new_bitmap_msg
+    'You have to create a new M x N bitmap with "I M N" command'
+  end
 
   def dimensions_in_range?(width, height)
     width.to_i.between?(MIN_DIMENSION, MAX_DIMENSION) &&

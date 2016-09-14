@@ -5,15 +5,10 @@ describe Command do
   subject { described_class.new }
   let(:validator) { double(:validator) }
 
-  before do
-    allow(CommandValidator).to receive(:new) { validator }
-    allow(validator).to receive(:validate_create_new_bitmap) { errors }
-    allow(validator).to receive(:validate_colour_pixel) { errors }
-    allow(validator).to receive(:validate_draw_vertical_line) { errors }
-    allow(validator).to receive(:validate_draw_horizontal_line) { errors }
-  end
+  before { allow(CommandValidator).to receive(:new) { validator } }
 
   describe '#create_new_bitmap' do
+    before { allow(validator).to receive(:validate_create_new_bitmap) { errors } }
     context 'when validator returns error' do
       let(:errors) { ['some error'] }
 
@@ -41,19 +36,40 @@ describe Command do
 
   describe '#clear_bitmap' do
     let(:bitmap) { double }
-    before { allow(bitmap).to receive(:clear_pixels) }
-
-    it 'calls :clear_pixels' do
-      subject.clear_bitmap(bitmap)
-      expect(bitmap).to have_received(:clear_pixels)
+    before do
+      allow(bitmap).to receive(:clear_pixels)
+      allow(validator).to receive(:validate_clear_bitmap) { errors }
     end
 
-    it { expect(subject.clear_bitmap(bitmap)).to be_instance_of(Response) }
+    context 'when validator returns error' do
+      let(:errors) { ['some error'] }
+
+      it 'does not call :clear_pixels' do
+        response = subject.clear_bitmap(bitmap)
+
+        expect(bitmap).not_to have_received(:clear_pixels)
+        expect(response).to be_instance_of(Response)
+      end
+    end
+
+    context 'when validator does not return error' do
+      let(:errors) { [] }
+
+      it 'does not call :clear_pixels' do
+        response = subject.clear_bitmap(bitmap)
+
+        expect(bitmap).to have_received(:clear_pixels)
+        expect(response).to be_instance_of(Response)
+      end
+    end
   end
 
   describe '#colour_pixel' do
     let(:bitmap) { double }
-    before { allow(bitmap).to receive(:colour_pixel) }
+    before do
+      allow(bitmap).to receive(:colour_pixel)
+      allow(validator).to receive(:validate_colour_pixel) { errors }
+    end
 
     context 'when validator returns error' do
       let(:errors) { ['some error'] }
@@ -80,7 +96,10 @@ describe Command do
 
   describe '#draw_vertical_line' do
     let(:bitmap) { double }
-    before { allow(bitmap).to receive(:draw_vertical_line) }
+    before do
+      allow(bitmap).to receive(:draw_vertical_line)
+      allow(validator).to receive(:validate_draw_vertical_line) { errors }
+    end
 
     context 'when validator returns error' do
       let(:errors) { ['some error'] }
@@ -107,7 +126,10 @@ describe Command do
 
   describe '#draw_horizontal_line' do
     let(:bitmap) { double }
-    before { allow(bitmap).to receive(:draw_horizontal_line) }
+    before do
+      allow(bitmap).to receive(:draw_horizontal_line)
+      allow(validator).to receive(:validate_draw_horizontal_line) { errors }
+    end
 
     context 'when validator returns error' do
       let(:errors) { ['some error'] }

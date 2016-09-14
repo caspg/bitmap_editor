@@ -10,7 +10,10 @@ class Bitmap
   end
 
   def colour_pixel(x, y, colour)
-    @pixels[x.to_i][y.to_i] = colour
+    x = x.to_i - 1
+    y = y.to_i - 1
+
+    @pixels[x][y] = colour
   end
 
   def clear_pixels
@@ -18,12 +21,20 @@ class Bitmap
   end
 
   def draw_vertical_line(x, y1, y2, colour)
-    (y1.to_i..y2.to_i).each do |row_index|
-      @pixels[x.to_i][row_index] = colour
+    x = x.to_i - 1
+    y1 = y1.to_i - 1
+    y2 = y2.to_i - 1
+
+    (y1..y2).each do |row_index|
+      @pixels[x][row_index] = colour
     end
   end
 
   def draw_horizontal_line(x1, x2, y, colour)
+    x1 = x1.to_i - 1
+    x2= x2.to_i - 1
+    y = y.to_i - 1
+
     (x1..x2).each do |column_index|
       @pixels[column_index][y] = colour
     end

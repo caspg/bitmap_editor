@@ -2,7 +2,8 @@ require 'spec_helper'
 require_relative '../app/command_validator'
 
 describe CommandValidator do
-  subject { CommandValidator.new }
+  subject         { CommandValidator.new }
+  let(:error_msg) { 'You have to create a new M x N bitmap with "I M N" command' }
 
   describe '#validate_create_new_bitmap' do
     let(:error_msg1) { 'You should provide two dimensions, width and height.' }
@@ -20,6 +21,12 @@ describe CommandValidator do
     it { expect(subject.validate_create_new_bitmap('string', '0')).to eq([error_msg3]) }
   end
 
+  describe '#validate_clear_bitmap' do
+    let(:bitmap) { nil }
+
+    it { expect(subject.validate_clear_bitmap(bitmap)).to eq(error_msg) }
+  end
+
   describe '#validate_colour_pixel' do
     let(:error_msg1) { 'Missing parameters. Correct command: "L X Y C"' }
     let(:error_msg2) { "Pixel coordinates should be within range; X: 1 - #{bitmap.width}, Y: 1 - #{bitmap.height}" }
@@ -27,6 +34,7 @@ describe CommandValidator do
     let(:error_msg4) { 'Coordinates must be an integer.' }
     let(:bitmap)     { double(:bitmap, width: 3, height: 5) }
 
+    it { expect(subject.validate_colour_pixel(nil, '-1', '5', nil)).to eq(error_msg) }
     it { expect(subject.validate_colour_pixel(bitmap, '-1', '5', nil)).to eq([error_msg1]) }
     it { expect(subject.validate_colour_pixel(bitmap, '-1', nil, nil)).to eq([error_msg1]) }
     it { expect(subject.validate_colour_pixel(bitmap, '-1', '5', 'W')).to eq([error_msg2]) }
@@ -45,6 +53,7 @@ describe CommandValidator do
     let(:error_msg7) { 'Coordinates must be an integer.' }
     let(:bitmap)     { double(:bitmap, width: 3, height: 5) }
 
+    it { expect(subject.validate_draw_vertical_line(nil, '1', '1', '2', nil)).to eq(error_msg) }
     it { expect(subject.validate_draw_vertical_line(bitmap, '1', '1', '2', nil)).to eq([error_msg1]) }
     it { expect(subject.validate_draw_vertical_line(bitmap, '123', '1', '2', nil)).to eq([error_msg1]) }
     it { expect(subject.validate_draw_vertical_line(bitmap, '123', '1', '2', 'W')).to eq([error_msg2]) }
@@ -65,6 +74,7 @@ describe CommandValidator do
     let(:error_msg7) { 'Coordinates must be an integer.' }
     let(:bitmap)     { double(:bitmap, width: 3, height: 5) }
 
+    it { expect(subject.validate_draw_horizontal_line(nil, '1', '1', '2', nil)).to eq(error_msg) }
     it { expect(subject.validate_draw_horizontal_line(bitmap, '1', '1', '2', nil)).to eq([error_msg1]) }
     it { expect(subject.validate_draw_horizontal_line(bitmap, '123', '1', '2', nil)).to eq([error_msg1]) }
     it { expect(subject.validate_draw_horizontal_line(bitmap, '1', '2', '123', 'W')).to eq([error_msg2]) }
