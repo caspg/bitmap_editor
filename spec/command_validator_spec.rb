@@ -24,7 +24,7 @@ describe CommandValidator do
   describe '#validate_clear_bitmap' do
     let(:bitmap) { nil }
 
-    it { expect(subject.validate_clear_bitmap(bitmap)).to eq(error_msg) }
+    it { expect(subject.validate_clear_bitmap(bitmap)).to eq([error_msg]) }
   end
 
   describe '#validate_colour_pixel' do
@@ -34,7 +34,7 @@ describe CommandValidator do
     let(:error_msg4) { 'Coordinates must be an integer.' }
     let(:bitmap)     { double(:bitmap, width: 3, height: 5) }
 
-    it { expect(subject.validate_colour_pixel(nil, '-1', '5', nil)).to eq(error_msg) }
+    it { expect(subject.validate_colour_pixel(nil, '-1', '5', nil)).to eq([error_msg]) }
     it { expect(subject.validate_colour_pixel(bitmap, '-1', '5', nil)).to eq([error_msg1]) }
     it { expect(subject.validate_colour_pixel(bitmap, '-1', nil, nil)).to eq([error_msg1]) }
     it { expect(subject.validate_colour_pixel(bitmap, '-1', '5', 'W')).to eq([error_msg2]) }
@@ -53,7 +53,7 @@ describe CommandValidator do
     let(:error_msg7) { 'Coordinates must be an integer.' }
     let(:bitmap)     { double(:bitmap, width: 3, height: 5) }
 
-    it { expect(subject.validate_draw_vertical_line(nil, '1', '1', '2', nil)).to eq(error_msg) }
+    it { expect(subject.validate_draw_vertical_line(nil, '1', '1', '2', nil)).to eq([error_msg]) }
     it { expect(subject.validate_draw_vertical_line(bitmap, '1', '1', '2', nil)).to eq([error_msg1]) }
     it { expect(subject.validate_draw_vertical_line(bitmap, '123', '1', '2', nil)).to eq([error_msg1]) }
     it { expect(subject.validate_draw_vertical_line(bitmap, '123', '1', '2', 'W')).to eq([error_msg2]) }
@@ -74,7 +74,7 @@ describe CommandValidator do
     let(:error_msg7) { 'Coordinates must be an integer.' }
     let(:bitmap)     { double(:bitmap, width: 3, height: 5) }
 
-    it { expect(subject.validate_draw_horizontal_line(nil, '1', '1', '2', nil)).to eq(error_msg) }
+    it { expect(subject.validate_draw_horizontal_line(nil, '1', '1', '2', nil)).to eq([error_msg]) }
     it { expect(subject.validate_draw_horizontal_line(bitmap, '1', '1', '2', nil)).to eq([error_msg1]) }
     it { expect(subject.validate_draw_horizontal_line(bitmap, '123', '1', '2', nil)).to eq([error_msg1]) }
     it { expect(subject.validate_draw_horizontal_line(bitmap, '1', '2', '123', 'W')).to eq([error_msg2]) }

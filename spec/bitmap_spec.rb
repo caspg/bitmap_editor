@@ -21,7 +21,7 @@ describe Bitmap do
         new_colour = 'A'
         bitmap.colour_pixel(1, 2, new_colour)
 
-        expect(bitmap.pixels[1][2]).to eq(new_colour)
+        expect(bitmap.pixels[1 - 1][2 - 1]).to eq(new_colour)
       end
     end
 
@@ -40,7 +40,7 @@ describe Bitmap do
     describe '#draw_vertical_line' do
       it 'sets all pixels in vertical line to given colour' do
         bitmap = Bitmap.new(width: 2, height: 3)
-        bitmap.draw_vertical_line(1, 1, 2, 'C')
+        bitmap.draw_vertical_line(0, 2, 3, 'C')
         expected_bitmap_pixels = [['O', 'O', 'O'], ['O', 'C', 'C']]
 
         expect(bitmap.pixels).to eq(expected_bitmap_pixels)
@@ -50,7 +50,7 @@ describe Bitmap do
     describe '#draw_vertical_line' do
       it 'sets all pixels in vertical line to given colour' do
         bitmap = Bitmap.new(width: 2, height: 3)
-        bitmap.draw_horizontal_line(0, 1, 2, 'C')
+        bitmap.draw_horizontal_line(1, 2, 3, 'C')
         expected_bitmap_pixels = [['O', 'O', 'C'], ['O', 'O', 'C']]
 
         expect(bitmap.pixels).to eq(expected_bitmap_pixels)

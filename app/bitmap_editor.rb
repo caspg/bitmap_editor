@@ -56,10 +56,6 @@ class BitmapEditor
     Response.new(@bitmap, 'goodbye!')
   end
 
-  def show_help
-    Response.new(@bitmap, help_message)
-  end
-
   def help_message
     <<~HEREDOC
       ? - Help

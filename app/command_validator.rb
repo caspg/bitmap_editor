@@ -2,9 +2,13 @@ class CommandValidator
   MIN_DIMENSION = 1
   MAX_DIMENSION = 250
 
-  def validate_create_new_bitmap(width, height)
-    errors = []
+  attr_reader :errors
 
+  def initialize(bitmap = nil)
+    @errors = []
+  end
+
+  def validate_create_new_bitmap(width, height)
     if width.nil? || height.nil?
       errors << 'You should provide two dimensions, width and height.'
     elsif !integer?(width) || !integer?(height)
@@ -17,45 +21,31 @@ class CommandValidator
   end
 
   def validate_clear_bitmap(bitmap)
-    create_new_bitmap_msg if bitmap.nil?
+    [create_new_bitmap_msg] if bitmap.nil?
   end
 
   def validate_colour_pixel(bitmap, x, y, colour)
-    return create_new_bitmap_msg if bitmap.nil?
-
-    errors = []
-
-    if x.nil? || y.nil? || colour.nil?
-      errors << 'Missing parameters. Correct command: "L X Y C"'
-      return errors
-    end
-
-    unless integer?(x) && integer?(y)
-      errors << 'Coordinates must be an integer.'
-      return errors
-    end
+    return [create_new_bitmap_msg] if bitmap.nil?
+    return ['Missing parameters. Correct command: "L X Y C"'] if x.nil? || y.nil? || colour.nil?
+    return ['Coordinates must be an integer.'] unless integer?(x) && integer?(y)
 
     unless pixel_coords_in_range?(bitmap, x, y)
       errors << "Pixel coordinates should be within range; X: #{MIN_DIMENSION} - #{bitmap.width}, Y: #{MIN_DIMENSION} - #{bitmap.height}"
     end
 
-    errors << 'Colour should be a string.' if colour.to_i.to_s == colour
+    errors << 'Colour should be a string.' if integer?(colour)
     errors
   end
 
   def validate_draw_vertical_line(bitmap, x, y1, y2, colour)
-    return create_new_bitmap_msg if bitmap.nil?
-
-    errors = []
+    return [create_new_bitmap_msg] if bitmap.nil?
 
     if x.nil? || y1.nil? || y2.nil? || colour.nil?
-      errors << 'Missing parameters. Correct command: "V X Y1 Y2 C"'
-      return errors
+      return ['Missing parameters. Correct command: "V X Y1 Y2 C"']
     end
 
     unless integer?(x) && integer?(y1) && integer?(y2)
-      errors << 'Coordinates must be an integer.'
-      return errors
+      return ['Coordinates must be an integer.']
     end
 
     unless x_coord_in_range?(bitmap.width, x)
@@ -75,18 +65,14 @@ class CommandValidator
   end
 
   def validate_draw_horizontal_line(bitmap, x1, x2, y, colour)
-    return create_new_bitmap_msg if bitmap.nil?
-
-    errors = []
+    return [create_new_bitmap_msg] if bitmap.nil?
 
     if x1.nil? || x2.nil? || y.nil? || colour.nil?
-      errors << 'Missing parameters. Correct command: "H X1 X2 Y C"'
-      return errors
+      return ['Missing parameters. Correct command: "H X1 X2 Y C"']
     end
 
     unless integer?(x1) && integer?(x2) && integer?(y)
-      errors << 'Coordinates must be an integer.'
-      return errors
+      return ['Coordinates must be an integer.']
     end
 
     if coords_in_correct_range?(x1, x2)
