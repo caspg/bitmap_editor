@@ -4,8 +4,8 @@ class Bitmap
   WHITE = 'O'.freeze
 
   def initialize(width:, height:)
-    @width = width
-    @height = height
+    @width = width.to_i
+    @height = height.to_i
     @pixels = create_pixels
   end
 
