@@ -2,8 +2,8 @@ require_relative './response'
 require_relative './command'
 
 class BitmapEditor
-  def initialize
-    @bitmap = nil
+  def initialize(bitmap = nil)
+    @bitmap = bitmap
   end
 
   def run

@@ -2,7 +2,8 @@ require 'spec_helper'
 require_relative '../app/bitmap_editor'
 
 describe BitmapEditor do
-  subject { described_class.new }
+  subject      { described_class.new(bitmap) }
+  let(:bitmap) { double(:bitmap) }
 
   describe '#run' do
     it 'outputs initial message with prompt sign' do
@@ -22,65 +23,85 @@ describe BitmapEditor do
   end
 
   describe '#execute_command' do
+    let(:command)  { double(:command) }
+
     before do
       # return different values each time :gets is called
-      allow(subject).to receive(:gets).and_return(input, 'X')
+      # allow(subject).to receive(:gets).and_return(input, 'X')
+      allow(Response).to receive(:new)
+      allow(Command).to receive(:new).and_return(command)
+      allow(command).to receive(:create_new_bitmap)
+      allow(command).to receive(:clear_bitmap)
+      allow(command).to receive(:colour_pixel)
+      allow(command).to receive(:draw_vertical_line)
+      allow(command).to receive(:draw_horizontal_line)
+      allow(command).to receive(:show_bitmap)
+
+      subject.execute_command(input)
     end
 
     context 'when command is I' do
-      let(:input) { 'I' }
+      let(:input) { ['I', 2, 2] }
+
+      it { expect(command).to have_received(:create_new_bitmap).with(input) }
     end
 
     context 'when command is C' do
-      let(:input) { 'C' }
+      let(:input) { ['C'] }
+
+      it { expect(command).to have_received(:clear_bitmap).with(bitmap) }
     end
 
     context 'when command is L' do
-      let(:input) { 'L' }
+      let(:input) { ['L', 2, 3, 'A'] }
+
+      it { expect(command).to have_received(:colour_pixel).with(bitmap, input) }
     end
 
     context 'when command is V' do
-      let(:input) { 'V' }
+      let(:input) { ['V', 2, 3, 6, 'W'] }
+
+      it { expect(command).to have_received(:draw_vertical_line).with(bitmap, input) }
     end
 
     context 'when command is H' do
-      let(:input) { 'H' }
+      let(:input) { ['H', 3, 5, 2, 'Z'] }
+
+      it { expect(command).to have_received(:draw_horizontal_line).with(bitmap, input) }
     end
 
     context 'when command is S' do
-      let(:input) { 'S' }
+      let(:input) { ['S'] }
+
+      it { expect(command).to have_received(:show_bitmap).with(bitmap) }
     end
 
     context 'when command is ?' do
-      let(:input) { '?' }
+      let(:input) { ['?'] }
 
-      it { expect { subject.run }.to output(expected_help_message_regex).to_stdout }
+      it { expect(Response).to have_received(:new).with(bitmap, expected_help_message) }
     end
 
     context 'when command is X' do
       let(:input) { 'X' }
 
-      it { expect { subject.run }.to output(/goodbye!/).to_stdout }
+      it { expect(Response).to have_received(:new).with(bitmap, 'goodbye!') }
     end
 
     context 'when there is no input' do
       let(:input) { '' }
 
-      it { expect { subject.run }.to output(/type \? for help\n>/).to_stdout }
+      it { expect(Response).to have_received(:new).with(bitmap, "type \? for help") }
     end
 
     context 'when there is unrecognised command' do
       let(:input) { 'stranger things' }
 
-      it { expect { subject.run }.to output(/unrecognised command \:\(/).to_stdout }
+      it { expect(Response).to have_received(:new).with(bitmap, 'unrecognised command :(') }
     end
   end
 
-  def expected_help_message_regex
-    /#{Regexp.quote(expected_help_message_string)}/
-  end
-
-  def expected_help_message_string
+  def expected_help_message
     <<~HEREDOC
       ? - Help
       I M N       - Create a new M x N image with all pixels coloured white (O).
