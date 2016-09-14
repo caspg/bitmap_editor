@@ -10,6 +10,8 @@ describe CommandValidator do
     let(:error_msg2) { 'Dimensions are out of range. Dimensions should be between 1 and 250.' }
     let(:error_msg3) { 'Coordinates must be an integer.' }
 
+    it { expect(subject.validate_create_new_bitmap('1', '5')).to eq([]) }
+
     it { expect(subject.validate_create_new_bitmap(nil, '5')).to eq([error_msg1]) }
     it { expect(subject.validate_create_new_bitmap('2', nil)).to eq([error_msg1]) }
     it { expect(subject.validate_create_new_bitmap(nil, nil)).to eq([error_msg1]) }
@@ -22,9 +24,10 @@ describe CommandValidator do
   end
 
   describe '#validate_clear_bitmap' do
-    let(:bitmap) { nil }
+    let(:bitmap) { double(:bitmap, width: 3, height: 5) }
 
-    it { expect(subject.validate_clear_bitmap(bitmap)).to eq([error_msg]) }
+    it { expect(subject.validate_clear_bitmap(nil)).to eq([error_msg]) }
+    it { expect(subject.validate_clear_bitmap(bitmap)).to eq([]) }
   end
 
   describe '#validate_colour_pixel' do
@@ -33,6 +36,8 @@ describe CommandValidator do
     let(:error_msg3) { 'Colour should be a string.' }
     let(:error_msg4) { 'Coordinates must be an integer.' }
     let(:bitmap)     { double(:bitmap, width: 3, height: 5) }
+
+    it { expect(subject.validate_colour_pixel(bitmap, '1', '5', 'C')).to eq([]) }
 
     it { expect(subject.validate_colour_pixel(nil, '-1', '5', nil)).to eq([error_msg]) }
     it { expect(subject.validate_colour_pixel(bitmap, '-1', '5', nil)).to eq([error_msg1]) }
@@ -52,6 +57,8 @@ describe CommandValidator do
     let(:error_msg6) { 'Colour should be a string.' }
     let(:error_msg7) { 'Coordinates must be an integer.' }
     let(:bitmap)     { double(:bitmap, width: 3, height: 5) }
+
+    it { expect(subject.validate_draw_vertical_line(bitmap, '1', '1', '2', 'W')).to eq([]) }
 
     it { expect(subject.validate_draw_vertical_line(nil, '1', '1', '2', nil)).to eq([error_msg]) }
     it { expect(subject.validate_draw_vertical_line(bitmap, '1', '1', '2', nil)).to eq([error_msg1]) }
@@ -73,6 +80,8 @@ describe CommandValidator do
     let(:error_msg6) { 'Colour should be a string.' }
     let(:error_msg7) { 'Coordinates must be an integer.' }
     let(:bitmap)     { double(:bitmap, width: 3, height: 5) }
+
+    it { expect(subject.validate_draw_horizontal_line(bitmap, '1', '2', '2', 'W')).to eq([]) }
 
     it { expect(subject.validate_draw_horizontal_line(nil, '1', '1', '2', nil)).to eq([error_msg]) }
     it { expect(subject.validate_draw_horizontal_line(bitmap, '1', '1', '2', nil)).to eq([error_msg1]) }

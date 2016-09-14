@@ -21,7 +21,7 @@ class CommandValidator
   end
 
   def validate_clear_bitmap(bitmap)
-    [create_new_bitmap_msg] if bitmap.nil?
+    bitmap.nil? ? [create_new_bitmap_msg] : []
   end
 
   def validate_colour_pixel(bitmap, x, y, colour)
